@@ -1,21 +1,26 @@
 import { Router } from 'express'
 import { CreateReminderUseCase } from '../core/reminder/application/create-reminder.usecase'
 import { ReminderTypeOrmRepository } from '../core/reminder/infrastructure/reminder.typeorm.repository'
+import { SigninUseCase } from '../core/user/application/signin.usecase';
+import { UserTypeOrmRepository } from '../core/user/infrastructure/user.typeorm.repository';
 
 const userRouter = Router()
 
 const createReminderUseCase = new CreateReminderUseCase(new ReminderTypeOrmRepository())
+const signinUseCase = new SigninUseCase(new UserTypeOrmRepository())
 
-userRouter.post('/signin', (request, response) => {
+userRouter.post('/signin', async (request, response) => {
   const { username, password } = request.body
 
-  response.json({
-    code: 'SUCCESS',
-    message: 'user',
-    data: {
-      username,
-      password
-    }
+  const isValid = await signinUseCase.invoke({
+    password,
+    username
+  })
+
+  response.status(200).json({
+    code: isValid ? 'SIGNIN_SUCCESS' : 'SIGNIN_ERROR',
+    message: isValid ? 'User signed' : 'Invalid user',
+    data: isValid
   })
 })
 

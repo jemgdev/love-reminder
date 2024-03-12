@@ -1,7 +1,8 @@
+require('dotenv').config()
 import 'reflect-metadata'
 import express from 'express'
 import { serverConfig } from './server-config'
-import { AppDataSource } from './core/reminder/infrastructure/data-source'
+import { AppDataSource } from './data-source'
 
 AppDataSource.initialize().then(() => {
   console.log('Database is connected successfuly')
