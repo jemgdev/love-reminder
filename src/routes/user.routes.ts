@@ -17,11 +17,20 @@ userRouter.post('/signin', async (request, response) => {
     username
   })
 
+  // @ts-ignore
+  request.session.username = username
+
   response.status(200).json({
     code: isValid ? 'SIGNIN_SUCCESS' : 'SIGNIN_ERROR',
     message: isValid ? 'User signed' : 'Invalid user',
     data: isValid
   })
+})
+
+userRouter.get('/signout', async (request, response) => {
+  // @ts-ignore
+  request.session.destroy()
+  response.redirect('/login')
 })
 
 userRouter.post('/post', async (request, response) => {

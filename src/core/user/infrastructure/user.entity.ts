@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn } from "typeorm"
+import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm"
+import { ReminderEntity } from '../../reminder/infrastructure/reminder.entity';
 
 @Entity()
 export class UserEntity {
@@ -27,4 +28,7 @@ export class UserEntity {
     nullable: true
   })
   avatar: string
+
+  @OneToMany(() => ReminderEntity, (reminder) => reminder.userId)
+  reminders: ReminderEntity[]
 }

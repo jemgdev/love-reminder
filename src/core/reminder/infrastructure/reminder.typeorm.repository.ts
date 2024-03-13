@@ -5,6 +5,13 @@ import { ReminderEntity } from './reminder.entity';
 import { v4 as uuid } from 'uuid'
 
 export class ReminderTypeOrmRepository implements ReminderRepository {
+  async getReminders(): Promise<Reminder[]> {
+    const reminderRepository = AppDataSource.getRepository(ReminderEntity)
+    
+    const remindersFound = await reminderRepository.find()
+
+    return remindersFound
+  }
   async saveReminder({ userId, title, description, image }: { userId: string; title: string; description: string; image: string; }): Promise<Reminder> {
     const reminderRepository = AppDataSource.getRepository(ReminderEntity)
     

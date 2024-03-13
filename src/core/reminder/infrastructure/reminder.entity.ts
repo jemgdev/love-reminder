@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm'
+import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm'
+import { UserEntity } from '../../user/infrastructure/user.entity';
 
 @Entity()
 export class ReminderEntity {
@@ -45,4 +46,7 @@ export class ReminderEntity {
     default: null
   })
   updatedAt: string
+
+  @ManyToOne(() => UserEntity, (user) => user.reminders)
+  user: UserEntity
 }
