@@ -27,9 +27,9 @@ const serverConfig = (app: Express): Express => {
     })
   })
 
-  app.use(userRouter)
+  app.use('/api/', userRouter)
+  app.use('/api/', reminderRouter)
   app.use(pageRouter)
-  app.use(reminderRouter)
   app.use(errorHandler)
   app.use(notFound)
 

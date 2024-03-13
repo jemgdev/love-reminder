@@ -26,12 +26,27 @@ export class ReminderTypeOrmRepository implements ReminderRepository {
     return reminderSaved
   }
 
-  async getReminderById(reminderId: string): Promise<Reminder | null> {
+  async getReminderById(reminderId: string): Promise<any | null> {
     const reminderRepository = AppDataSource.getRepository(ReminderEntity)
 
     const reminderFound = await reminderRepository.findOne({
       where: {
         id: reminderId
+      },
+      relations: {
+        user: true
+      },
+      select: {
+        description: true,
+        id: true,
+        image: true,
+        title: true,
+        updatedAt: true,
+        uploadAt: true,
+        user: {
+          username: true,
+          avatar: true
+        }
       }
     })
 
