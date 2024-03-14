@@ -4,11 +4,15 @@ import { ReminderTypeOrmRepository } from '../core/reminder/infrastructure/remin
 import { SigninUseCase } from '../core/user/application/signin.usecase';
 import { UserTypeOrmRepository } from '../core/user/infrastructure/user.typeorm.repository';
 import { cloudinary } from '../cloudinary';
+import { RegisterCommentUseCase } from '../core/user/application/register-comment.usecase';
+import { ListCommentsUseCase } from '../core/user/application/list-comments.usecase';
 
 const userRouter = Router()
 
 const createReminderUseCase = new CreateReminderUseCase(new ReminderTypeOrmRepository())
 const signinUseCase = new SigninUseCase(new UserTypeOrmRepository())
+const registerCommentUseCase = new RegisterCommentUseCase(new UserTypeOrmRepository())
+const listCommentsUseCase = new ListCommentsUseCase(new UserTypeOrmRepository())
 
 userRouter.post('/signin', async (request, response) => {
   const { username, password } = request.body
@@ -78,7 +82,34 @@ userRouter.post('/post', async (request, response) => {
       data: false
     })
   }
-  
+})
+
+userRouter.post('/comments', async (request, response) => {
+  const { description, reminderId, userId } = request.body
+
+  const result = await registerCommentUseCase.invoke({
+    description,
+    reminderId,
+    userId
+  })
+
+  response.status(201).json({
+    code: 'COMMENT_CREATED',
+    message: 'Comment has been created',
+    data: result
+  })
+})
+
+userRouter.get('/comments/:reminderId', async (request, response) => {
+  const { reminderId } = request.params
+
+  const result = await listCommentsUseCase.invoke(reminderId)
+
+  response.status(201).json({
+    code: 'COMMENTS_FOUND',
+    message: 'Comment found',
+    data: result
+  })
 })
 
 export { userRouter }

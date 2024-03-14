@@ -1,6 +1,7 @@
 import { DataSource } from "typeorm";
 import { ReminderEntity } from "./core/reminder/infrastructure/reminder.entity";
 import { UserEntity } from "./core/user/infrastructure/user.entity";
+import { CommentEntity } from "./core/user/infrastructure/comment.entity";
 
 export const AppDataSource = new DataSource({
   type: "mysql",
@@ -11,7 +12,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DATABASE_NAME,
   synchronize: true,
   logging: false,
-  entities: [ReminderEntity, UserEntity],
+  entities: [ReminderEntity, UserEntity, CommentEntity],
   subscribers: [],
   migrations: [],
 })

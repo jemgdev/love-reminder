@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm"
 import { ReminderEntity } from '../../reminder/infrastructure/reminder.entity';
+import { CommentEntity } from "./comment.entity";
 
 @Entity()
 export class UserEntity {
@@ -29,6 +30,9 @@ export class UserEntity {
   })
   avatar: string
 
-  @OneToMany(() => ReminderEntity, (reminder) => reminder.userId)
+  @OneToMany(() => ReminderEntity, (reminder) => reminder.user)
   reminders: ReminderEntity[]
+
+  @OneToMany(() => CommentEntity, (comment) => comment.user)
+  comments: CommentEntity[]
 }

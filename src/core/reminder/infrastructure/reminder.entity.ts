@@ -1,5 +1,6 @@
-import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm'
+import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm'
 import { UserEntity } from '../../user/infrastructure/user.entity';
+import { CommentEntity } from '../../user/infrastructure/comment.entity';
 
 @Entity()
 export class ReminderEntity {
@@ -49,4 +50,7 @@ export class ReminderEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.reminders)
   user: UserEntity
+
+  @OneToMany(() => CommentEntity, (comment) => comment.reminder)
+  comments: CommentEntity[]
 }

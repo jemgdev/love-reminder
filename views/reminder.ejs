@@ -7,33 +7,7 @@
   <title>Document</title>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container">
-      <!-- Logo y Título -->
-      <a class="navbar-brand" href="/home">Love Reminder ❤</a>
-      <!-- Botón para colapsar en dispositivos pequeños -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <!-- Contenido del Navbar -->
-      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" href="/home">
-              <img src="<%= user.avatar %>" alt="Avatar" class="rounded-circle me-2" width="32" height="32">
-              <%= user.username %>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="btn btn-primary my-1 mx-1">Crear recordatorio</a>
-          </li>
-          <li class="nav-item">
-            <a href="/api/signout" class="btn btn-primary my-1 mx-1">Cerrar sesión</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+  <%- include('navbar'); -%>
   <div class="container pt-3">
     <div class="row">
       <div class="col-md-6">
@@ -44,26 +18,25 @@
             <p class="card-text"><%= reminder.description %></p>
           </div>
           <div class="card-footer">
-            <p>Subido por <img src="<%= reminder.user.avatar %>" alt="Avatar" class="rounded-circle me-2" width="32" height="32"><%= reminder.user.username %>, el dia <%= reminder.uploadAt %></p>
+            <p>Subido por <img src="<%= reminder.user.avatar %>" alt="Avatar" class="rounded-circle me-2" width="32" height="32"><%= reminder.user.username %> <%= reminder.uploadAt %></p>
           </div>
         </div>
       </div>
       <div class="col-md-6">
         <div class="card">
           <div class="card-body">
-            <h2 class="card-title">Comentarios adicionales:</h2>
-            <div class="comment-list">
+            <h2 class="card-title">Comentarios:</h2>
+            <div class="comment-list" id="comment-section">
               <!-- Aquí se listarían los comentarios -->
-              <div class="comment">
-                <p><strong>Josue: </strong>Recuerdo esto como la primera vez</p>
-              </div>
-              <div class="comment">
-                <p><strong>Valentina: </strong>Yo tambien amor ❤</p>
-              </div>
+              <% comments.forEach(function(comment){ %>
+                <div class="comment">
+                  <p><strong><%= comment.user.username %>: </strong><%= comment.description %></p>
+                </div>
+              <% }); %>
               <!-- Fin de la lista de comentarios -->
             </div>
             <hr>
-            <form action="/comment" method="post">
+            <form id="comment-form">
               <div class="form-group">
                 <textarea class="form-control" name="comment" rows="5"></textarea>
               </div>
@@ -76,4 +49,45 @@
   </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+  const commentSection = document.getElementById('comment-section')
+  const commentForm = document.getElementById('comment-form')
+
+  commentForm.addEventListener('submit', async event => {
+    event.preventDefault()
+
+    const userId = '<%= user.id %>'
+    const reminderId = '<%= reminder.id %>'
+    const description = commentForm.comment.value
+    commentForm.comment.value = ''
+
+    await fetch('/api/comments', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userId,
+        reminderId,
+        description
+      })
+    });
+
+    const response = await fetch(`/api/comments/${reminderId}`);
+    const data = await response.json()
+    const commentsFound = data.data
+
+    console.log(commentsFound)
+
+    commentSection.innerHTML = ''
+    commentsFound.forEach(comment => {
+      commentSection.innerHTML += `
+        <div class="comment">
+          <p><strong>${comment.user.username}: </strong>${comment.description}</p>
+        </div>
+      `
+    })
+  })
+
+</script>
 </html>
