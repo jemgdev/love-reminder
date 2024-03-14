@@ -14,31 +14,35 @@ const signinUseCase = new SigninUseCase(new UserTypeOrmRepository())
 const registerCommentUseCase = new RegisterCommentUseCase(new UserTypeOrmRepository())
 const listCommentsUseCase = new ListCommentsUseCase(new UserTypeOrmRepository())
 
-userRouter.post('/signin', async (request, response) => {
+userRouter.post('/signin', async (request, response, next) => {
   const { username, password } = request.body
 
-  const isValid = await signinUseCase.invoke({
-    password,
-    username
-  })
-
-  // @ts-ignore
-  request.session.username = username
-
-  response.status(200).json({
-    code: isValid ? 'SIGNIN_SUCCESS' : 'SIGNIN_ERROR',
-    message: isValid ? 'User signed' : 'Invalid user',
-    data: isValid
-  })
+  try {
+    const isValid = await signinUseCase.invoke({
+      password,
+      username
+    })
+  
+    // @ts-ignore
+    request.session.username = username
+  
+    response.status(200).json({
+      code: isValid ? 'SIGNIN_SUCCESS' : 'SIGNIN_ERROR',
+      message: isValid ? 'User signed' : 'Invalid user',
+      data: isValid
+    })
+  } catch (error) {
+    next(error)
+  }
 })
 
-userRouter.get('/signout', async (request, response) => {
+userRouter.get('/signout', async (request, response, _next) => {
   // @ts-ignore
   request.session.destroy()
   response.redirect('/login')
 })
 
-userRouter.post('/post', async (request, response) => {
+userRouter.post('/post', async (request, response, next) => {
   const {
     userId,
     title,
@@ -75,41 +79,44 @@ userRouter.post('/post', async (request, response) => {
       data: reminderCreated
     })
   } catch (error) {
-    console.log(error)
-    response.status(400).json({
-      code: 'REMINDER_CREATED_ERROR',
-      message: 'Reminder has not been created',
-      data: false
-    })
+    next(error)
   }
 })
 
-userRouter.post('/comments', async (request, response) => {
+userRouter.post('/comments', async (request, response, next) => {
   const { description, reminderId, userId } = request.body
 
-  const result = await registerCommentUseCase.invoke({
-    description,
-    reminderId,
-    userId
-  })
-
-  response.status(201).json({
-    code: 'COMMENT_CREATED',
-    message: 'Comment has been created',
-    data: result
-  })
+  try {
+    const result = await registerCommentUseCase.invoke({
+      description,
+      reminderId,
+      userId
+    })
+  
+    response.status(201).json({
+      code: 'COMMENT_CREATED',
+      message: 'Comment has been created',
+      data: result
+    })
+  } catch (error) {
+    next(error)
+  }
 })
 
-userRouter.get('/comments/:reminderId', async (request, response) => {
+userRouter.get('/comments/:reminderId', async (request, response, next) => {
   const { reminderId } = request.params
 
-  const result = await listCommentsUseCase.invoke(reminderId)
+  try {
+    const result = await listCommentsUseCase.invoke(reminderId)
 
-  response.status(201).json({
-    code: 'COMMENTS_FOUND',
-    message: 'Comment found',
-    data: result
-  })
+    response.status(201).json({
+      code: 'COMMENTS_FOUND',
+      message: 'Comment found',
+      data: result
+    })
+  } catch (error) {
+    next(error) 
+  }
 })
 
 export { userRouter }

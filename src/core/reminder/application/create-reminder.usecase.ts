@@ -14,13 +14,17 @@ export class CreateReminderUseCase {
     description: string,
     image: string 
   }) {
-    const reminder = await this.reminderRepository.saveReminder({
-      description,
-      image,
-      title,
-      userId
-    })
-
-    return reminder
+    try {
+      const reminder = await this.reminderRepository.saveReminder({
+        description,
+        image,
+        title,
+        userId
+      })
+  
+      return reminder
+    } catch (error) {
+      throw new Error('Error in create reminder usecase')
+    }
   }
 }

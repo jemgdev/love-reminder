@@ -4,8 +4,13 @@ export class ListRemindersUseCase {
   constructor (private readonly reminderRepository: ReminderRepository) {}
   
   public async invoke () {
-    const remindersFound = await this.reminderRepository.getReminders()
+    try {
+      const remindersFound = await this.reminderRepository.getReminders()
 
-    return remindersFound
+      return remindersFound
+    } catch (error) {
+      throw new Error('Error in list reminder usecase')
+    }
+    
   }
 }

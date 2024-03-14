@@ -4,6 +4,10 @@ export class GetUserUseCase {
   constructor (private readonly userRepository: UserRepository) {}
 
   public async invoke (username: string) {
-    return await this.userRepository.getUserByUsername(username)
+    try {
+      return await this.userRepository.getUserByUsername(username) 
+    } catch (error) {
+      throw new Error('Error in get user usecase');
+    }
   }
 }
