@@ -36,4 +36,10 @@ pageRouter.get('/reminders/:id', authGuard, async (request, response) => {
   response.render('reminder', { reminder: reminderFound, user: userFound })
 })
 
+pageRouter.get('/upload', authGuard, async (request, response) => {
+  // @ts-ignore
+  const userFound = await getUserUseCase.invoke(request.session.username)
+  response.render('create-reminder', { user: userFound })
+})
+
 export { pageRouter }

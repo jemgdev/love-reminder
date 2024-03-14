@@ -1,5 +1,6 @@
 import express, { Express } from 'express'
 import session from 'express-session'
+import fileUpload from 'express-fileupload'
 import { notFound } from './middlewares/not-found'
 import { errorHandler } from './middlewares/error-handler'
 import { userRouter } from './routes/user.routes'
@@ -16,9 +17,10 @@ const serverConfig = (app: Express): Express => {
     resave: false,
     saveUninitialized: true
   }))
-  app.use(express.urlencoded({ extended: true }))
   app.use(express.json())
+  app.use(express.urlencoded({ extended: true }))
   app.use(express.static('public'))
+  app.use(fileUpload())
 
   app.get('/', (_request, response) => {
     response.status(200).json({

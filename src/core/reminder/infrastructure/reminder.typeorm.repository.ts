@@ -8,7 +8,11 @@ export class ReminderTypeOrmRepository implements ReminderRepository {
   async getReminders(): Promise<Reminder[]> {
     const reminderRepository = AppDataSource.getRepository(ReminderEntity)
     
-    const remindersFound = await reminderRepository.find()
+    const remindersFound = await reminderRepository.find({
+      order: {
+        uploadAt: 'DESC'
+      }
+    })
 
     return remindersFound
   }

@@ -65,7 +65,6 @@
     if (!data.data) {
       console.log('Usuario o contraseña invalidos')
     } else {
-      window.localStorage.setItem('credentials', JSON.stringify({ username, password }))
       window.location.replace('/home')
     }
     

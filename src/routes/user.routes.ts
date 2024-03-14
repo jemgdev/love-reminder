@@ -3,6 +3,7 @@ import { CreateReminderUseCase } from '../core/reminder/application/create-remin
 import { ReminderTypeOrmRepository } from '../core/reminder/infrastructure/reminder.typeorm.repository'
 import { SigninUseCase } from '../core/user/application/signin.usecase';
 import { UserTypeOrmRepository } from '../core/user/infrastructure/user.typeorm.repository';
+import { cloudinary } from '../cloudinary';
 
 const userRouter = Router()
 
@@ -38,21 +39,46 @@ userRouter.post('/post', async (request, response) => {
     userId,
     title,
     description,
-    image
   } = request.body
 
-  const reminderCreated = await createReminderUseCase.invoke({
-    description,
-    image,
-    title,
-    userId
-  })
-
-  response.status(201).json({
-    code: 'REMINDER_CREATED',
-    message: 'Reminder has been created',
-    data: reminderCreated
-  })
+  try {
+    const result = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload_stream({
+        folder: 'LoveReminder'
+      }, (error, result) => {
+        if (error) { 
+          reject(error)
+        }
+        resolve(result)
+      })
+      //@ts-ignore
+      .end(request.files?.file.data)
+    })
+  
+    // @ts-ignore
+    const image = result!.secure_url
+    
+    const reminderCreated = await createReminderUseCase.invoke({
+      description,
+      image,
+      title,
+      userId
+    })
+  
+    response.status(201).json({
+      code: 'REMINDER_CREATED',
+      message: 'Reminder has been created',
+      data: reminderCreated
+    })
+  } catch (error) {
+    console.log(error)
+    response.status(400).json({
+      code: 'REMINDER_CREATED_ERROR',
+      message: 'Reminder has not been created',
+      data: false
+    })
+  }
+  
 })
 
 export { userRouter }
