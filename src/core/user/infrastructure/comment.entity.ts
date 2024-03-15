@@ -24,7 +24,8 @@ export class CommentEntity {
 
   @Column({
     type: 'varchar',
-    length: 255
+    length: 255,
+    collation: 'utf8mb4_unicode_ci'
   })
   description: string
 

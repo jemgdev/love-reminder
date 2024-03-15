@@ -23,8 +23,8 @@ export class ReminderEntity {
   title: string
 
   @Column({
-    type: 'varchar',
-    length: 255
+    type: 'text',
+    collation: 'utf8mb4_unicode_ci'
   })
   description: string
 

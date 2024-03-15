@@ -9,7 +9,7 @@
 <body>
   <%- include('navbar'); -%>
   <div class="container">
-    <h1 class="my-4 text-center">Recordatorios de amor ❤</h1>
+    <h2 class="my-4 text-center">Recordatorios de amor ❤</h2>
     <div class="row row-cols-1 row-cols-md-3 g-4">
       <% reminders.forEach(function(reminder){ %>
         <!-- Tarjeta 1 -->
@@ -18,7 +18,6 @@
           <img src=<%= reminder.image %> class="card-img-top" alt="...">
           <div class="card-body">
             <h5 class="card-title"><%= reminder.title %></h5>
-            <p class="card-text"><%= reminder.description %></p>
             <a href="/reminders/<%= reminder.id %>" class="btn btn-primary">Ingresar</a>
           </div>
         </div>

@@ -10,6 +10,7 @@ export const AppDataSource = new DataSource({
   username: process.env.DATABASE_USERNAME,
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
+  charset: 'utf8mb4',
   synchronize: true,
   logging: false,
   entities: [ReminderEntity, UserEntity, CommentEntity],
