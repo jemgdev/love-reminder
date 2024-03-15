@@ -24,7 +24,8 @@ export class ReminderTypeOrmRepository implements ReminderRepository {
       id: uuid(),
       image,
       title,
-      userId
+      userId,
+      uploadAt: new Date().toISOString()
     })
 
     return reminderSaved
