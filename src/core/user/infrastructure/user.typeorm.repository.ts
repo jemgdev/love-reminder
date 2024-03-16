@@ -56,6 +56,26 @@ export class UserTypeOrmRepository implements UserRepository {
     return userFound
   }
 
+  async updatePassword({ username, password }: { username: string, password: string }): Promise<boolean> {
+    const reminderRepository = AppDataSource.getRepository(UserEntity)
+    
+    const userFound = await reminderRepository.findOne({
+      where: {
+        username
+      }
+    })
+
+    if (!userFound) {
+      return false
+    }
+
+    userFound.password = password
+
+    await reminderRepository.save(userFound)
+
+    return true
+  }
+
   async signin({ username, password }: { username: string; password: string; }): Promise<boolean> {
     const reminderRepository = AppDataSource.getRepository(UserEntity)
     

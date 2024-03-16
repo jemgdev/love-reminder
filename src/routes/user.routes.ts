@@ -7,6 +7,7 @@ import { cloudinary } from '../cloudinary';
 import { RegisterCommentUseCase } from '../core/user/application/register-comment.usecase';
 import { ListCommentsUseCase } from '../core/user/application/list-comments.usecase';
 import { GetUserUseCase } from '../core/user/application/get-user.usecase';
+import { ChangePasswordUseCase } from '../core/user/application/change-password.usecase';
 
 const userRouter = Router()
 
@@ -15,6 +16,7 @@ const signinUseCase = new SigninUseCase(new UserTypeOrmRepository())
 const getUserUseCase = new GetUserUseCase(new UserTypeOrmRepository())
 const registerCommentUseCase = new RegisterCommentUseCase(new UserTypeOrmRepository())
 const listCommentsUseCase = new ListCommentsUseCase(new UserTypeOrmRepository())
+const changePasswordUseCase = new ChangePasswordUseCase(new UserTypeOrmRepository())
 
 userRouter.post('/signin', async (request, response, next) => {
   const { username, password } = request.body
@@ -32,6 +34,38 @@ userRouter.post('/signin', async (request, response, next) => {
       code: isValid ? 'SIGNIN_SUCCESS' : 'SIGNIN_ERROR',
       message: isValid ? 'User signed' : 'Invalid user',
       data: isValid
+    })
+  } catch (error) {
+    next(error)
+  }
+})
+
+userRouter.post('/change-password', async (request, response, next) => {
+  const { username, oldPassword, newPassword } = request.body
+
+  try {
+    const isValid = await signinUseCase.invoke({
+      password: oldPassword,
+      username
+    })
+
+    if (!isValid) {
+      return response.status(200).json({
+        code: 'UPDATE_PASSWORD_ERROR',
+        message: 'User signed',
+        data: false
+      })
+    }
+  
+    const isChangeSuccessful = await changePasswordUseCase.invoke({
+      password: newPassword,
+      username
+    })
+
+    response.status(200).json({
+      code: 'UPDATE_PASSWORD',
+      message: 'User password changed',
+      data: isChangeSuccessful
     })
   } catch (error) {
     next(error)
