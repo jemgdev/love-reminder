@@ -6,11 +6,13 @@ import { UserTypeOrmRepository } from '../core/user/infrastructure/user.typeorm.
 import { cloudinary } from '../cloudinary';
 import { RegisterCommentUseCase } from '../core/user/application/register-comment.usecase';
 import { ListCommentsUseCase } from '../core/user/application/list-comments.usecase';
+import { GetUserUseCase } from '../core/user/application/get-user.usecase';
 
 const userRouter = Router()
 
 const createReminderUseCase = new CreateReminderUseCase(new ReminderTypeOrmRepository())
 const signinUseCase = new SigninUseCase(new UserTypeOrmRepository())
+const getUserUseCase = new GetUserUseCase(new UserTypeOrmRepository())
 const registerCommentUseCase = new RegisterCommentUseCase(new UserTypeOrmRepository())
 const listCommentsUseCase = new ListCommentsUseCase(new UserTypeOrmRepository())
 
@@ -30,6 +32,26 @@ userRouter.post('/signin', async (request, response, next) => {
       code: isValid ? 'SIGNIN_SUCCESS' : 'SIGNIN_ERROR',
       message: isValid ? 'User signed' : 'Invalid user',
       data: isValid
+    })
+  } catch (error) {
+    next(error)
+  }
+})
+
+userRouter.get('/users/:username', async (request, response, next) => {
+  const { username } = request.params
+
+  try {
+    const userFound = await getUserUseCase.invoke(username)
+  
+    response.status(200).json({
+      code: userFound ? 'GET_USER' : 'GET_USER_ERROR',
+      message: userFound ? 'User found' : 'User not found',
+      data: {
+        id: userFound?.id,
+        username: userFound?.username,
+        avatar: userFound?.avatar
+      }
     })
   } catch (error) {
     next(error)
