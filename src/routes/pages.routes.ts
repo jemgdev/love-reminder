@@ -46,7 +46,6 @@ pageRouter.get('/reminders/:id', authGuard, async (request, response) => {
 
     response.render('reminder', { reminder: { ...reminderFound, uploadAt: moment(reminderFound.uploadAt).fromNow() }, user: userFound, comments: commentsFound })
   } catch (error) {
-    console.log('Error in page router')
     response.render('error')
   }
 })

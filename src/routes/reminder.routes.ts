@@ -9,8 +9,11 @@ const listRemindersUseCase = new ListRemindersUseCase(new ReminderTypeOrmReposit
 const getReminderUseCase = new GetReminderUseCase(new ReminderTypeOrmRepository())
 
 reminderRouter.get('/reminders', async (request, response, next) => {
+  const { take } = request.query
+
   try {
-    const remindersFound = await listRemindersUseCase.invoke()
+    const takeNumber = take ? Number(take) : undefined
+    const remindersFound = await listRemindersUseCase.invoke(takeNumber)
 
     response.status(200).json({
       code: 'REMINDERS_FOUND',

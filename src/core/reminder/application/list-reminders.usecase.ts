@@ -3,9 +3,9 @@ import { ReminderRepository } from "../domain/reminder.repository";
 export class ListRemindersUseCase {
   constructor (private readonly reminderRepository: ReminderRepository) {}
   
-  public async invoke () {
+  public async invoke (take?: number) {
     try {
-      const remindersFound = await this.reminderRepository.getReminders()
+      const remindersFound = await this.reminderRepository.getReminders(take)
 
       return remindersFound
     } catch (error) {
