@@ -5,17 +5,23 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "nodemon src/index.ts",
-    "start": "tsc && node build/src/index.js"
+    "start": "tsc && node build/src/index.js",
+    "cy:open": "cypress open",
+    "cy:tests": "cypress run"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@cypress/browserify-preprocessor": "^3.0.2",
+    "@types/cypress-cucumber-preprocessor": "^4.0.5",
     "@types/express": "4.17.21",
     "@types/express-fileupload": "1.4.4",
     "@types/express-session": "1.18.0",
     "@types/node": "^20.11.25",
     "@types/uuid": "^9.0.8",
+    "cypress": "^13.7.0",
+    "cypress-cucumber-preprocessor": "^4.3.1",
     "dotenv": "16.4.5",
     "nodemon": "3.1.0",
     "ts-node": "10.9.2",
@@ -32,5 +38,9 @@
     "reflect-metadata": "^0.2.1",
     "typeorm": "^0.3.20",
     "uuid": "9.0.1"
+  },
+  "cypress-cucumber-preprocessor": {
+    "nonGlobalStepDefinitions": true,
+    "step_definitions": "cypress/e2e/love-reminder"
   }
 }
