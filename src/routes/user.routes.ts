@@ -8,15 +8,36 @@ import { RegisterCommentUseCase } from '../core/user/application/register-commen
 import { ListCommentsUseCase } from '../core/user/application/list-comments.usecase';
 import { GetUserUseCase } from '../core/user/application/get-user.usecase';
 import { ChangePasswordUseCase } from '../core/user/application/change-password.usecase';
+import { CreateUserUseCase } from '../core/user/application/create-user.usecase';
 
 const userRouter = Router()
 
 const createReminderUseCase = new CreateReminderUseCase(new ReminderTypeOrmRepository())
 const signinUseCase = new SigninUseCase(new UserTypeOrmRepository())
+const createUserUseCase = new CreateUserUseCase(new UserTypeOrmRepository())
 const getUserUseCase = new GetUserUseCase(new UserTypeOrmRepository())
 const registerCommentUseCase = new RegisterCommentUseCase(new UserTypeOrmRepository())
 const listCommentsUseCase = new ListCommentsUseCase(new UserTypeOrmRepository())
 const changePasswordUseCase = new ChangePasswordUseCase(new UserTypeOrmRepository())
+
+userRouter.post('/create', async (request, response, next) => {
+  const { username, password } = request.body
+
+  try {
+    const isValid = await createUserUseCase.invoke({
+      password,
+      username
+    })
+  
+    response.status(200).json({
+      code: isValid ? 'CREATE_SUCCESS' : 'CREATE_ERROR',
+      message: isValid ? 'User created' : 'Invalid user',
+      data: isValid
+    })
+  } catch (error) {
+    next(error)
+  }
+})
 
 userRouter.post('/signin', async (request, response, next) => {
   const { username, password } = request.body
