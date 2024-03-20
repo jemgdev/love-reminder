@@ -6,7 +6,7 @@ import { v4 as uuid } from 'uuid'
 
 export class ReminderTypeOrmRepository implements ReminderRepository {
   async getReminders(take?: number): Promise<Reminder[]> {
-    const reminderRepository = AppDataSource.getRepository(ReminderEntity)
+    const reminderRepository = AppDataSource.getInstance().getRepository(ReminderEntity)
     
     const remindersFound = await reminderRepository.find({
       order: {
@@ -18,7 +18,7 @@ export class ReminderTypeOrmRepository implements ReminderRepository {
     return remindersFound
   }
   async saveReminder({ userId, title, description, image }: { userId: string; title: string; description: string; image: string; }): Promise<Reminder> {
-    const reminderRepository = AppDataSource.getRepository(ReminderEntity)
+    const reminderRepository = AppDataSource.getInstance().getRepository(ReminderEntity)
     
     const reminderSaved = await reminderRepository.save({
       description,
@@ -33,7 +33,7 @@ export class ReminderTypeOrmRepository implements ReminderRepository {
   }
 
   async getReminderById(reminderId: string): Promise<any | null> {
-    const reminderRepository = AppDataSource.getRepository(ReminderEntity)
+    const reminderRepository = AppDataSource.getInstance().getRepository(ReminderEntity)
 
     const reminderFound = await reminderRepository.findOne({
       where: {
