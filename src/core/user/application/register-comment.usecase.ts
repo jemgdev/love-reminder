@@ -13,6 +13,7 @@ export class RegisterCommentUseCase {
   
       return result
     } catch (error) {
+      console.log('Error in register comment usecase', error)
       throw new Error('Error in register comment usecase')
     }
   }

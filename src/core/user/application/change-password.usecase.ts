@@ -12,6 +12,7 @@ export class ChangePasswordUseCase {
   
       return isValid
     } catch (error) {
+      console.log('Error in signin usecase', error)
       throw new Error('Error in signin usecase')
     }
   }

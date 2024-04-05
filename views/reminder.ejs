@@ -144,8 +144,6 @@
     const data = await response.json()
     const commentsFound = data.data
 
-    console.log(commentsFound)
-
     commentSection.innerHTML = ''
     commentsFound.forEach(comment => {
       commentSection.innerHTML += `
@@ -157,20 +155,17 @@
   })
 </script>
 <script>
-  // Manejar el evento click en las imágenes dentro del contenedor con clase "images"
-  document.querySelectorAll('.images img').forEach(function(img) {
-    img.addEventListener('click', function() {
-      // Obtener la ruta de la imagen clickeada y establecerla como src de la imagen de tamaño completo
-      document.getElementById('full-image').src = this.src;
-      // Mostrar el visor de imágenes
-      document.getElementById('image-viewer').style.display = 'block';
+  document.querySelectorAll('.images img')
+    .forEach((img) => {
+      img.addEventListener('click', () => {
+        document.getElementById('full-image').src = this.src
+        document.getElementById('image-viewer').style.display = 'block'
+      });
     });
-  });
 
-  // Manejar el evento click en el botón de cerrar dentro del contenedor con id "image-viewer"
-  document.querySelector('#image-viewer .close').addEventListener('click', function() {
-    // Ocultar el visor de imágenes
-    document.getElementById('image-viewer').style.display = 'none';
-  });
+  document.querySelector('#image-viewer .close')
+    .addEventListener('click', () => {
+      document.getElementById('image-viewer').style.display = 'none'
+    });
 </script>
 </html>

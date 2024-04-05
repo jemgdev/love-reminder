@@ -7,6 +7,7 @@ export class GetUserUseCase {
     try {
       return await this.userRepository.getUserByUsername(username) 
     } catch (error) {
+      console.log('Error in get user usecase', error)
       throw new Error('Error in get user usecase');
     }
   }

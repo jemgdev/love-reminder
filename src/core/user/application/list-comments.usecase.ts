@@ -9,6 +9,7 @@ export class ListCommentsUseCase {
 
       return comments
     } catch (error) {
+      console.log('Error in list comments usecase', error)
       throw new Error('Error in list comments usecase')
     }
   }

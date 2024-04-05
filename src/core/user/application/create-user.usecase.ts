@@ -10,6 +10,7 @@ export class CreateUserUseCase {
         password
       }) 
     } catch (error) {
+      console.log('Error in get user usecase', error)
       throw new Error('Error in get user usecase');
     }
   }

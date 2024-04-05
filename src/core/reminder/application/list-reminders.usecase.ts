@@ -9,6 +9,7 @@ export class ListRemindersUseCase {
 
       return remindersFound
     } catch (error) {
+      console.log('Error in list reminder usecase', error)
       throw new Error('Error in list reminder usecase')
     }
     

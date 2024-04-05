@@ -24,7 +24,7 @@ export class CreateReminderUseCase {
   
       return reminder
     } catch (error) {
-      console.log(error)
+      console.log('Error in create reminder usecase', error)
       throw new Error('Error in create reminder usecase')
     }
   }
