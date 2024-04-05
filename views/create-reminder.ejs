@@ -17,8 +17,12 @@
             <h2 class="card-title text-center">Subir recordatorio de amor ❤</h2>
             <form id="reminder-form">
               <div class="my-2">
+                <label id="preview-label" class="form-label" hidden>Vista previa:</label>
+                <img id="preview" class="rounded mx-auto d-block" hidden>
+              </div>
+              <div class="my-2">
                 <label for="formFile" class="form-label">Subir imagen:</label>
-                <input class="form-control" type="file" name="file" required>
+                <input class="form-control" id="input-file" type="file" name="file" required>
               </div>
               <div class="form-group mt-2">
                 <label for="titulo">Título:</label>
@@ -41,9 +45,27 @@
   </div>
 
   <script>
+    const inputFile = document.getElementById('input-file')
     const reminderForm = document.getElementById('reminder-form')
     const sendButton = document.getElementById('sendButton')
     const loadButton = document.getElementById('loadButton')
+    const preview = document.getElementById('preview');
+    const labelPreview = document.getElementById('preview-label');
+
+    inputFile.addEventListener('change', (event) => {
+      const reader = new FileReader();
+
+      reader.onload = function(event) {
+        preview.src = event.target.result;
+        preview.hidden = false;
+        preview.style.width = '300px'
+        preview.style.height = '300px'
+        labelPreview.hidden = false;
+      }
+
+      // Leer el contenido del archivo como una URL de datos (data URL)
+      reader.readAsDataURL(event.target.files[0]);
+    })
 
     reminderForm.addEventListener('submit', async (event) => {
       event.preventDefault()
