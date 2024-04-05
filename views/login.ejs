@@ -62,10 +62,10 @@
 
     const data = await response.json()
 
-    console.log(data)
-
     if (!data.data) {
-      console.log('Usuario o contraseña invalidos')
+      event.target.username.value = ''
+      event.target.password.value = ''
+      alert('Usuario o contraseña invalidos')
     } else {
       window.location.replace('/home')
     }
