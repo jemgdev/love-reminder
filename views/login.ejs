@@ -44,11 +44,6 @@
     const username = event.target.username.value
     const password = event.target.password.value
 
-    console.log({
-      username,
-      password
-    })
-
     const response = await fetch('/api/signin', {
       method: 'POST',
       headers: {
