@@ -139,9 +139,9 @@ userRouter.post('/post', async (request, response, next) => {
       //@ts-ignore
       .end(request.files?.file.data)
     })
-  
-    // @ts-ignore
-    const image = result!.secure_url
+
+    //@ts-ignore
+    const image = result.secure_url ?? process.env.ERROR_UPLOAD_IMAGE
     
     const reminderCreated = await createReminderUseCase.invoke({
       description,
@@ -155,7 +155,21 @@ userRouter.post('/post', async (request, response, next) => {
       message: 'Reminder has been created',
       data: reminderCreated
     })
-  } catch (error) {
+  } catch (error: any) {
+    if (error.message === 'Empty file') {
+      const reminderCreated = await createReminderUseCase.invoke({
+        description,
+        image: process.env.ERROR_UPLOAD_IMAGE!,
+        title,
+        userId
+      })
+    
+      response.status(201).json({
+        code: 'REMINDER_CREATED_WITH_ERRORS',
+        message: 'Reminder has been created with errors',
+        data: reminderCreated
+      })
+    }
     next(error)
   }
 })

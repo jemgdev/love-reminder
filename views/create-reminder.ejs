@@ -16,6 +16,10 @@
           <div class="card-body">
             <h2 class="card-title text-center">Subir recordatorio de amor ❤</h2>
             <form id="reminder-form">
+              <div class="mb-3 mt-2">
+                <label for="formFile" class="form-label">Subir imagen:</label>
+                <input class="form-control" type="file" name="file">
+              </div>
               <div class="form-group mt-2">
                 <label for="titulo">Título:</label>
                 <input type="text" class="form-control" name="title" required>
@@ -23,10 +27,6 @@
               <div class="form-group mt-2">
                 <label for="descripcion">Descripción:</label>
                 <textarea class="form-control" name="description" rows="3" required></textarea>
-              </div>
-              <div class="mb-3 mt-2">
-                <label for="formFile" class="form-label">Subir imagen:</label>
-                <input class="form-control" type="file" name="file">
               </div>
               <button type="submit" id="sendButton" class="btn btn-primary btn-block">Subir</button>
               <button class="btn btn-primary btn-block" id="loadButton" type="button" disabled hidden>
@@ -55,13 +55,6 @@
       const file = reminderForm.file.files[0]
       const userId = `<%= user.id %>`
 
-      console.log({
-        title,
-        description,
-        file,
-        userId
-      })
-
       const formData = new FormData();
       formData.append('title', title);
       formData.append('description', description);
@@ -73,15 +66,26 @@
         body: formData
       });
 
-      window.location.replace('/home')
-
       const data = await response.json();
 
-      if (data.code !== 'REMINDER_CREATED') {
-        alert('Error al subir la imagen')
+      if (
+        data.code === 'REMINDER_CREATED_WITH_ERRORS'
+      ) {
+        alert('El recordatorio se creó, pero hubo un error al subir la imagen')
+        return window.location.replace('/home')
       }
 
-      window.location.replace('/home')
+      if (
+        data.code === 'REMINDER_CREATED'
+      ) {
+        window.location.replace('/home')
+      }
+      
+      if (
+        data.code !== 'REMINDER_CREATED'
+      ) {
+        alert('Error al subir el recordatorio')
+      }
     })
   </script>
 </body>
