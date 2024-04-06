@@ -158,7 +158,7 @@
   document.querySelectorAll('.images img')
     .forEach((img) => {
       img.addEventListener('click', () => {
-        document.getElementById('full-image').src = this.src
+        document.getElementById('full-image').src = img.src
         document.getElementById('image-viewer').style.display = 'block'
       });
     });
