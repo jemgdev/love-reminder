@@ -5,14 +5,15 @@ import { ReminderEntity } from './reminder.entity';
 import { v4 as uuid } from 'uuid'
 
 export class ReminderTypeOrmRepository implements ReminderRepository {
-  async getReminders(take?: number): Promise<Reminder[]> {
+  async getReminders(take?: number, page?: number): Promise<Reminder[]> {
     const reminderRepository = AppDataSource.getInstance().getRepository(ReminderEntity)
-    
+    const skip = page ? (page - 1) * (take || 1) : undefined
     const remindersFound = await reminderRepository.find({
       order: {
         uploadAt: 'DESC'
       },
-      take: take ?? undefined
+      take: take ?? undefined,
+      skip
     })
 
     return remindersFound
