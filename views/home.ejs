@@ -34,7 +34,7 @@
 <script>
   const cardContainer = document.getElementById('card-container')
   const loadingPagination = document.getElementById('loading-pagination')
-  let page = 2
+  let page = 1
   const take = 9
 
   const getReminders = async (take, page) => {
@@ -45,16 +45,17 @@
   }
 
   window.addEventListener('scroll', async () => {
-    const pageHeight = document.documentElement.scrollHeight
-    const windowHeight = window.innerHeight
-    const scrollPosition = window.scrollY || window.pageYOffset || document.body.scrollTop + (document.documentElement && document.documentElement.scrollTop || 0)
-    const nearBottomThreshold = 100 // Puedes ajustar este valor según tus necesidades
-
-    if (pageHeight - windowHeight - scrollPosition < nearBottomThreshold) {
+    const totalHeight = document.documentElement.scrollHeight;
+    const visibleHeight = window.innerHeight;
+    const scrollPosition = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+    const distanceToBottom = totalHeight - (visibleHeight + scrollPosition);
+    
+    if (distanceToBottom < threshold) {
       page++
       loadingPagination.hidden = false
       const remindersFound = await getReminders(take, page)
       if (remindersFound.length !== 0) {
+        loadingPagination.hidden = true
         remindersFound.forEach(reminder => {
           cardContainer.innerHTML += `
             <div class="col">
