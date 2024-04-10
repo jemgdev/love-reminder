@@ -24,7 +24,7 @@ pageRouter.get('/login', (request, response) => {
 
 pageRouter.get('/home', authGuard, async (request, response) => {
   try {
-    const remindersFound = await listRemindersUseCase.invoke()
+    const remindersFound = await listRemindersUseCase.invoke(9, 1)
     // @ts-ignore
     const userFound = await getUserUseCase.invoke(request.session.username)
       

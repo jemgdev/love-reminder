@@ -3,12 +3,27 @@ import { ReminderRepository } from '../domain/reminder.repository';
 import { AppDataSource } from '../../../data-source';
 import { ReminderEntity } from './reminder.entity';
 import { v4 as uuid } from 'uuid'
+import { LessThanOrEqual } from 'typeorm';
 
 export class ReminderTypeOrmRepository implements ReminderRepository {
   async getReminders(take?: number, page?: number): Promise<Reminder[]> {
     const reminderRepository = AppDataSource.getInstance().getRepository(ReminderEntity)
+    const [ lastReminder ] = await reminderRepository.find({
+      order: {
+        uploadAt: 'ASC'
+      },
+      take: 1
+    })
+
+    if (!lastReminder) {
+      return []
+    }
+
     const skip = page ? (page - 1) * (take || 1) : undefined
     const remindersFound = await reminderRepository.find({
+      where: {
+        id: LessThanOrEqual(lastReminder.id)
+      },
       order: {
         uploadAt: 'DESC'
       },
