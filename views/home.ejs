@@ -45,11 +45,12 @@
   }
 
   window.addEventListener('scroll', async () => {
-    const totalHeight = document.documentElement.scrollHeight;
-    const visibleHeight = window.innerHeight;
+    const totalHeight = document.documentElement.scrollHeight
+    const visibleHeight = window.innerHeight
     const scrollPosition = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
     const distanceToBottom = totalHeight - (visibleHeight + scrollPosition);
-    
+    const threshold = 1
+
     if (distanceToBottom < threshold) {
       page++
       loadingPagination.hidden = false
