@@ -9,6 +9,7 @@ import { ListCommentsUseCase } from '../core/user/application/list-comments.usec
 import { GetUserUseCase } from '../core/user/application/get-user.usecase';
 import { ChangePasswordUseCase } from '../core/user/application/change-password.usecase';
 import { CreateUserUseCase } from '../core/user/application/create-user.usecase';
+import { Constants } from '../contants';
 
 const userRouter = Router()
 
@@ -141,7 +142,7 @@ userRouter.post('/post', async (request, response, next) => {
     })
 
     //@ts-ignore
-    const image = result.secure_url ?? process.env.ERROR_UPLOAD_IMAGE
+    const image = result.secure_url ?? Constants.ERROR_UPLOAD_IMAGE
     
     const reminderCreated = await createReminderUseCase.invoke({
       description,
@@ -159,7 +160,7 @@ userRouter.post('/post', async (request, response, next) => {
     if (error.message === 'Empty file') {
       const reminderCreated = await createReminderUseCase.invoke({
         description,
-        image: process.env.ERROR_UPLOAD_IMAGE!,
+        image: Constants.ERROR_UPLOAD_IMAGE!,
         title,
         userId
       })

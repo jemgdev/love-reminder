@@ -6,14 +6,15 @@ import { errorHandler } from './middlewares/error-handler'
 import { userRouter } from './routes/user.routes'
 import { pageRouter } from './routes/pages.routes'
 import { reminderRouter } from './routes/reminder.routes'
+import { Constants } from './contants'
 
 const serverConfig = (app: Express): Express => {
 
-  app.set('PORT', process.env.PORT || 3000)
+  app.set('PORT', Constants.PORT || 3000)
   app.set('view engine', 'ejs')
   
   app.use(session({
-    secret: process.env.SECRET_SESSION!,
+    secret: Constants.SECRET_SESSION!,
     resave: false,
     saveUninitialized: true
   }))
