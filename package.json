@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "nodemon src/index.ts",
-    "start": "tsc && node build/src/index.js",
+    "start": "node build/src/index.js",
+    "build": "tsc && xcopy public build\\public /E /I /Y && xcopy views build\\views /E /I /Y",
     "cy:open": "cypress open",
     "cy:tests": "cypress run"
   },
